@@ -8,8 +8,12 @@ def check_password():
     if "password_correct" not in st.session_state:
         st.session_state["password_correct"] = False
 
-    # Show password input
-    password = st.text_input("Password", type="password")
+    # Show password input with autocomplete enabled
+    password = st.text_input(
+        "Password", 
+        type="password", 
+        autocomplete="current-password" # This line is the new addition
+    )
     
     # Show confirm button
     if st.button("Confirm"):
@@ -67,7 +71,7 @@ spoiler_level = st.selectbox(
     "What is the last book you have completed?",
     ("The Way of Kings", "Words of Radiance", "Oathbringer", "Rhythm of War", "Wind and Truth")
 )
-st.info(f"Companion is configured with knowledge up to **{spo_level}**.")
+st.info(f"Companion is configured with knowledge up to **{spoiler_level}**.")
 
 # Configure the Google AI client with the secret key
 try:
