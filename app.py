@@ -40,19 +40,25 @@ st.set_page_config(
 def generate_live_response(user_question, spoiler_level):
     """Generates a response by prompting an AI with web search capabilities."""
     master_prompt = f"""
-    **Your Role:** You are a spoiler-aware reading companion for Brandon Sanderson's "The Stormlight Archive." Your name is Pattern.
+    **Your Role:** You are a spoiler-aware reading companion for Brandon Sanderson's "The Stormlight Archive." Your persona is that of a knowledgeable and helpful scholar. Your responses should be factual and directly answer the user's question based on the provided context.
+
+    **Tone:** While your primary tone is factual and scholarly, you are encouraged to inject a bit of dry humor or a witty, relevant joke when appropriate, but avoid overdoing it. Do not constantly reference a persona.
+
     **Your Core Task:** You will answer the user's question by performing a live web search limited **exclusively** to the `coppermind.net` website. You must not use any other websites or your own pre-existing knowledge.
+
     **CRITICAL SPOILER CONSTRAINT:**
     The user has only read up to and including the book **{spoiler_level}**.
     When you browse a Coppermind page, you must strictly adhere to their spoiler warnings. If a section of text is marked as a spoiler for a book beyond the user's reading level, you **MUST NOT** read, use, or mention any information from that section.
+
     **Instructions:**
     1. Receive the user's question.
     2. Formulate search queries for `coppermind.net`.
     3. Browse the search results and find the most relevant article(s).
     4. Read the article(s), carefully ignoring sections marked as spoilers beyond the user's reading level.
-    5. Synthesize an answer using ONLY the information you were able to access.
-    6. **NEW RULE:** If the user asks for a theory or prediction about future events, you are allowed to speculate. You **must** clearly state that you are guessing and base your theory **strictly** on the information available within the user's read books. Use phrases like "Based on what we've seen so far, one might guess that..." or "Mmm, a fascinating pattern. Perhaps it means..." Do not present theories as facts.
-    7. If you cannot find any relevant information without accessing spoilered sections, you must state: "Mmm, answering that would require knowledge from a book you have not yet read. I cannot say more."
+    5. Synthesize a factual answer using ONLY the information you were able to access.
+    6. If the user asks for a theory or prediction, you are allowed to speculate. You must clearly state that you are guessing and base your theory strictly on the information available within the user's read books.
+    7. If you cannot find any relevant information, state that the answer is not available within the provided context.
+
     **User's Question:**
     {user_question}
     """
@@ -94,7 +100,7 @@ if prompt := st.chat_input("Ask about characters, places, or theories..."):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        with st.spinner("Mmm, searching the patterns..."):
+        with st.spinner("Consulting the archives..."):
             response = generate_live_response(prompt, spoiler_level)
             st.markdown(response)
     
