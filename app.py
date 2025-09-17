@@ -3,30 +3,28 @@ import google.generativeai as genai
 
 # --- PASSWORD PROTECTION ---
 def check_password():
-    """Returns `True` if the user has the correct password."""
-    # Initialize session state if it doesn't exist
-    if "password_correct" not in st.session_state:
-        st.session_state["password_correct"] = False
+    """Returns `True` if the user is logged in."""
+    
+    # If the user is already logged in, just return True
+    if st.session_state.get("password_correct", False):
+        return True
 
-    # Show password input with autocomplete enabled
+    # If not logged in, show the password input form
     password = st.text_input(
         "Password", 
         type="password", 
-        autocomplete="current-password" # This line is the new addition
+        autocomplete="current-password"
     )
     
-    # Show confirm button
     if st.button("Confirm"):
-        # Check if the entered password is correct
         if password == st.secrets["APP_PASSWORD"]:
             st.session_state["password_correct"] = True
-            # Rerun the script to hide the login form and show the app
-            st.rerun() 
+            st.rerun() # Rerun to immediately hide the login form
         else:
             st.error("😕 Password incorrect")
             
-    # Return the password status
-    return st.session_state["password_correct"]
+    # If we are here, the user is not yet authenticated
+    return False
 
 
 if not check_password():
