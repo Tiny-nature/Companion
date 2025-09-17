@@ -39,7 +39,6 @@ st.set_page_config(
 )
 
 # --- CORE LOGIC ---
-# The generate_live_response function remains exactly the same as before
 def generate_live_response(user_question, spoiler_level):
     """Generates a response by prompting an AI with web search capabilities."""
     master_prompt = f"""
@@ -67,9 +66,10 @@ def generate_live_response(user_question, spoiler_level):
 st.title("📚 Stormlight Companion")
 st.caption("Live-searching the Coppermind with a spoiler-aware assistant.")
 
+# UPDATED LIST OF BOOKS
 spoiler_level = st.selectbox(
     "What is the last book you have completed?",
-    ("The Way of Kings", "Words of Radiance", "Oathbringer", "Rhythm of War")
+    ("The Way of Kings", "Words of Radiance", "Oathbringer", "Rhythm of War", "Wind and Truth")
 )
 st.info(f"Companion is configured with knowledge up to **{spoiler_level}**.")
 
@@ -99,9 +99,9 @@ if prompt := st.chat_input("Ask about characters, places, or theories..."):
         with st.spinner("Mmm, searching the patterns..."):
             response = generate_live_response(prompt, spoiler_level)
             st.markdown(response)
-
+    
     st.session_state.messages.append({"role": "assistant", "content": response})
-
+    
 # --- ATTRIBUTION ---
 st.markdown("---")
 st.markdown("Knowledge sourced from [The Coppermind Wiki](https://coppermind.net), which is licensed under [CC BY-NC-SA 3.0](https://creativecommons.org/licenses/by-nc-sa/3.0/).")
