@@ -3,31 +3,27 @@ import google.generativeai as genai
 
 # --- PASSWORD PROTECTION ---
 def check_password():
-    """Returns `True` if the user had the correct password."""
-    def password_entered():
-        """Checks whether a password entered by the user is correct."""
-        if st.session_state["password"] == st.secrets["APP_PASSWORD"]:
-            st.session_state["password_correct"] = True
-            del st.session_state["password"]  # Don't store password.
-        else:
-            st.session_state["password_correct"] = False
-
+    """Returns `True` if the user has the correct password."""
+    # Initialize session state if it doesn't exist
     if "password_correct" not in st.session_state:
-        # First run, show input for password.
-        st.text_input(
-            "Password", type="password", on_change=password_entered, key="password"
-        )
-        return False
-    elif not st.session_state["password_correct"]:
-        # Password not correct, show input + error.
-        st.text_input(
-            "Password", type="password", on_change=password_entered, key="password"
-        )
-        st.error("😕 Password incorrect")
-        return False
-    else:
-        # Password correct.
-        return True
+        st.session_state["password_correct"] = False
+
+    # Show password input
+    password = st.text_input("Password", type="password")
+    
+    # Show confirm button
+    if st.button("Confirm"):
+        # Check if the entered password is correct
+        if password == st.secrets["APP_PASSWORD"]:
+            st.session_state["password_correct"] = True
+            # Rerun the script to hide the login form and show the app
+            st.rerun() 
+        else:
+            st.error("😕 Password incorrect")
+            
+    # Return the password status
+    return st.session_state["password_correct"]
+
 
 if not check_password():
     st.stop() # Do not render the rest of the app if password is not correct
@@ -71,7 +67,7 @@ spoiler_level = st.selectbox(
     "What is the last book you have completed?",
     ("The Way of Kings", "Words of Radiance", "Oathbringer", "Rhythm of War", "Wind and Truth")
 )
-st.info(f"Companion is configured with knowledge up to **{spoiler_level}**.")
+st.info(f"Companion is configured with knowledge up to **{spo_level}**.")
 
 # Configure the Google AI client with the secret key
 try:
